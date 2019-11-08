@@ -140,8 +140,8 @@ func handleBiward(l net.Listener, inbi chan []byte, biout chan []byte) {
 		// Listen for an incoming connection
 		conn, err := l.Accept()
 		if err != nil {
-			//fmt.Println("Error accepting: ", err.Error())
-			//os.Exit(1)
+			fmt.Println("Error accepting: ", err.Error())
+			os.Exit(1)
 		}
 		// Handle connections in a new goroutine
 		go handleBiwardRequest(conn, inbi, biout)
@@ -151,15 +151,13 @@ func handleBiward(l net.Listener, inbi chan []byte, biout chan []byte) {
 //write from port to channel
 func handleInwardRequest(conn net.Conn, inbi chan []byte) {
 	for {
-		// Make a buffer to hold incoming data.
+
 		buf := make([]byte, BUFSIZE)
-		// Read the incoming connection into the buffer.
+
 		_, err := conn.Read(buf)
 		if err != nil {
-			//fmt.Println("Error reading:", err.Error())
-			//os.Exit(1)
+			return
 		}
-
 		inbi <- buf
 	}
 
@@ -173,8 +171,7 @@ func handleOutwardRequest(conn net.Conn, biout chan []byte) {
 
 		_, err := conn.Write(buf)
 		if err != nil {
-			//fmt.Println("Error writing:", err.Error())
-			//os.Exit(1)
+			return
 		}
 	}
 
@@ -189,10 +186,10 @@ func handleBiwardRequest(conn net.Conn, inbi chan []byte, biout chan []byte) {
 		buf := make([]byte, BUFSIZE)
 
 		for {
+
 			_, err := conn.Read(buf)
 			if err != nil {
-				fmt.Println("Error reading:", err.Error())
-				os.Exit(1)
+				return
 			}
 
 			biout <- buf
@@ -208,8 +205,7 @@ func handleBiwardRequest(conn net.Conn, inbi chan []byte, biout chan []byte) {
 
 			_, err := conn.Write(buf)
 			if err != nil {
-				fmt.Println("Error writing:", err.Error())
-				os.Exit(1)
+				return
 			}
 
 		}
