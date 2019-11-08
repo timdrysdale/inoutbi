@@ -1,7 +1,7 @@
 # Editor savefiles
 *~
 *#
-
+.#*
 # Binaries for programs and plugins
 *.exe
 *.exe~
