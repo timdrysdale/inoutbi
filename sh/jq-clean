@@ -1,0 +1,5 @@
+#!/bin/bash
+while true; 
+do 
+jq -n 'try inputs catch {}'
+done 

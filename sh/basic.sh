@@ -1,4 +1,33 @@
 #!/bin/bash
+# set up bidirectional modification
+# args: leftport rightport leftToRightCommand rightToLeftCommand
+#
+# assumes freeport shell is on the path
+# freeport:
+# #/bin/bash
+# comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1
+#
+# the commands should use stdin/stdout and operate in a while loop like this:-
+# jq-addtime:
+# #!/bin/bash
+# while true; 
+# do 
+# jq -c '.time=now'
+# done
+#
+# jq-clean:
+# #!/bin/bash
+# while true; 
+# do 
+# jq -n 'try inputs catch {}'
+# done 
+#
+# example: add timestamp to JSON objects using jq in one direction
+# and sanitising in the other
+# 
+# ./basic.sh 3000 3001 jq-addtime jq-clean
+
+
 LIN=$(freeport)
 LOU=$(freeport)
 TIN=$(freeport)
@@ -18,19 +47,6 @@ BBI=$(freeport)
 (inoutbi -in $RIN -out $ROU -bi $RBI)&
 (inoutbi -in $BIN -out $BOU -bi $BBI)&
 
-#echo $LIN
-#echo $LOU
-#echo $TIN
-#echo $TOU
-#echo $RIN
-#echo $ROU
-#echo $BIN
-#echo $BOU
-#echo $LBI
-#echo $TBI
-#echo $RBI
-#echo $BBI
-
 #let the listeners start up
 sleep 1s
 
@@ -48,19 +64,3 @@ sleep 1s
 read -r -d '' _ </dev/tty
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
-# kill the processes 
-# do we need all of these kills?
-#fuser -k $LIN/tcp
-#fuser -k $LOU/tcp
-#fuser -k $TIN/tcp
-#fuser -k $TOU/tcp
-#fuser -k $RIN/tcp
-#fuser -k $ROU/tcp
-#fuser -k $BIN/tcp
-#fuser -k $BOU/tcp
-#fuser -k $LBI/tcp
-#fuser -k $TBI/tcp
-#fuser -k $RBI/tcp
-#fuser -k $BBI/tcp
-# how do we kill command socats?
-# how do we kill client-only socats?
