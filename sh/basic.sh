@@ -57,8 +57,8 @@ sleep 1s
 (socat tcp:localhost:$BOU tcp:localhost:$LIN)&
 
 # run the commands in parallel
-(socat tcp:localhost:$TBI exec:$3,pty,ctty)&
-(socat tcp:localhost:$BBI exec:$4,pty,ctty)&
+(socat tcp:localhost:$TBI exec:$3,pty,ctty,echo=0)&
+(socat tcp:localhost:$BBI exec:$4,pty,ctty,echo=0)&
 
 # idle waiting for abort from user
 read -r -d '' _ </dev/tty
