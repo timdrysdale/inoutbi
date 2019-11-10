@@ -1,5 +1,5 @@
 #!/bin/bash
 while true; 
 do 
-jq -c '.' 
+jq -cM '.' 
 done 

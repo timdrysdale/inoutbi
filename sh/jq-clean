@@ -1,5 +1,5 @@
 #!/bin/bash
 while true; 
 do 
-jq -nc 'try inputs catch {}'
+jq -cMn 'try inputs catch {}'
 done 
